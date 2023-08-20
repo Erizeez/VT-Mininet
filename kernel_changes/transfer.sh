@@ -2,7 +2,7 @@
 
 if [ "z$1" = "z" ]; then
     echo "usage: $0 path/to/kernel/src"
-    echo "  e.g. $0 /home/yjq/ExtendKernel/linux-3.16.3/linux-3.16.3"
+    echo "  e.g. $0 /home/yjq/ExtendKernel/linux-5.15/linux-5.15"
     exit 1
 fi
 
@@ -16,26 +16,24 @@ fi
 # generate patch file
 PATCH=VirtualTime.patch
 echo "Step 0. patch file written to ${PATCH}"
-diff -rup ../../linux-3.16.3/ ./ > ${PATCH}
+diff -rup ../../linux-5.15/ ./ > ${PATCH}
 echo ""
 
 
 FILES="kernel/fork.c \
-kernel/time.c \
+kernel/time/time.c \
 kernel/time/timekeeping.c \
-arch/x86/syscalls/syscall_64.tbl \
-arch/x86/vdso/vclock_gettime.c \
+arch/x86/entry/syscalls/syscall_64.tbl \
+lib/vdso/gettimeofday.c \
 include/uapi/asm-generic/unistd.h include/uapi/linux/sched.h \
 include/linux/sched.h \
-include/linux/init_task.h \
+init/init_task.c \
 include/linux/syscalls.h \
 include/net/sch_generic.h \
 virtual_time/virtual_time.c \
 virtual_time/Makefile \
 net/sched/sch_generic.c \
-net/sched/sch_htb.c \
 net/sched/act_police.c \
-net/sched/sch_api.c \
 Makefile \
 build_all.sh"
 
@@ -52,6 +50,5 @@ echo ""
 
 echo "Step 2. install syscall wrapper"
 cp -v syscall_wrapper/* ../test_vt_kernel/syscall.wrap/
-cp -v syscall_wrapper/* ../mininet/
 # no need to wrap applications like iperf3
 

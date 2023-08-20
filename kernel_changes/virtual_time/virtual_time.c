@@ -1,8 +1,9 @@
 #include <linux/kernel.h>
+#include <linux/syscalls.h>
 
 /* well, this is just a toy */
-asmlinkage long sys_helloworld(void)
+SYSCALL_DEFINE0(helloworld)
 {
-    printk("Hello world from Jiaqi\n");
-    return 0;
+	printk("Hello world from Jiaqi\n");
+	return 0;
 }
